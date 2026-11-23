@@ -1,5 +1,4 @@
-# Turing-Machin-Simulator
-# Source Files Overview
+# Source Files Overview of Turing Machine Simulator
 1. Main.java: runs the simulated Turing Machine
 2. readFileAndParse.java: reads file and checks the syntax
 3. runMethod.java: sequential or return end result
