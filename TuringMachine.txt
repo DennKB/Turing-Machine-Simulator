@@ -1,9 +1,5 @@
-WRITE Y
+scan: IF _ GOTO append
 RIGHT
-LEFT
-IF X GOTO Yez
-RIGHT
-WRITE S
-
-Yez:
+GOTO scan
+append: WRITE 1
 HALT
