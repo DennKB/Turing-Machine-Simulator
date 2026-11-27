@@ -1,0 +1,62 @@
+# Binary Incrementor
+- Alphabet: {0, 1}
+- Initial Tape State: 1 0 1 1
+- Expected Output: 1 1 1 0
+- Code:
+
+scan_right:
+  IF _ GOTO step_back
+  RIGHT
+  GOTO scan_right
+
+step_back:
+  LEFT
+  GOTO add_one
+
+add_one:
+  IF 1 GOTO flip_one
+  IF 0 GOTO flip_zero
+  IF _ GOTO flip_blank
+
+flip_one:
+  WRITE 0
+  LEFT
+  GOTO add_one
+
+flip_zero:
+  WRITE 1
+  HALT
+
+flip_blank:
+  WRITE 1
+  HALT
+
+# Unary Addition
+- Alphabet: {0, 1, +}
+- Initial Tape State: 1 1 1 + 1 1
+- Expected Output: 1 1 1 1 1
+- Code:
+
+find_plus:
+  IF + GOTO join_numbers
+  RIGHT
+  GOTO find_plus
+
+join_numbers:
+  WRITE 1
+  GOTO find_end
+
+find_end:
+  IF _ GOTO step_back
+  RIGHT
+  GOTO find_end
+
+step_back:
+  LEFT
+  GOTO erase_last
+
+erase_last:
+  WRITE _
+  HALT
+
+===

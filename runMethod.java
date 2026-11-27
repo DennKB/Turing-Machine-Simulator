@@ -1,87 +1,54 @@
-import java.util.List;
+import java.util.Scanner;
 
-public class runMethod
-{	
+public class runMethod {
 
 	Tape tape;
-	readFileAndParse parser; 
-	List<StmtNode> parsedProgram;
-	char[] infTape;
+	readFileAndParse parser;
 
-	runMethod(Tape tape, readFileAndParse parser)
-	{
+	runMethod(Tape tape, readFileAndParse parser) {
 		this.tape = tape;
 		this.parser = parser;
-		this.parsedProgram = parser.getParsedProgram();
-		this.infTape = tape.getTape();
 	}
 
-	int counter = 0;
+	int executionCounter = 0;
 
-	public void sequential()
-	{
-		while (tape.getStatus() && counter < 10000)
-		{
-			StmtNode currentCommand = parser.getCommand();
+	public void sequential() {
+		Scanner input = new Scanner(System.in);
+		int instructionCounter = 0;
+		System.out.print("\nPress Enter to Proceed, Input Anything Else then Enter to Stop\n");
 
-			currentCommand.execute();
-			counter++;
-		}
+		for (executionCounter = 0 ; executionCounter < 10000 && tape.getStatus() ; executionCounter++) {
+			try {
+				StmtNode currentCommand = parser.getCommand(instructionCounter);
+				instructionCounter = currentCommand.execute(instructionCounter);
 
-		tape.success();
-	}
-	
-	public void endResult()
-	{
-		while (tape.getStatus() && counter < 10000)
-		{
-			StmtNode currentCommand = parser.getCommand();
+				int temp = instructionCounter;
+				tape.printCurrentState(parser.getNextCommand(temp));
 
-			currentCommand.execute();
-			counter++;
-		}
-
-		tape.success();
-	}
-
-	public int getPointerValue()
-	{
-		return tape.getPointerValue();
-	}
-
-	public void printTape()
-	{
-		int temp = 0;
-		int limit = 19;
-
-		do {
-			if (tape.getEntry(temp + 1) != '_' && temp == limit)
-			{
-				printTwenty(temp, limit);
-				temp = limit;
-				limit += 20;
-			} else if (tape.getEntry(temp + 1) == '_')
-			{
-				if (tape.getEntry(temp + 2) != '_') {
-					printTwenty(temp, limit);
-					printTwenty(temp + 20, limit + 20);
+				String choice = input.nextLine();
+				if (choice != null && !choice.isEmpty()) {
+					tape.stop();
 				}
-			} else
-			{
-				printTwenty(temp, limit);
+			} catch (IndexOutOfBoundsException e) {
+				tape.stop();
 			}
-		} while (temp <= limit);
+		}
+		input.close();
 	}
 
-	public void printTwenty(int temp, int limit)
-	{
-		System.out.println("\nEntry Number " + temp + " to " + limit + ": \n");
-		do {
-			if (temp + 1 > limit) {
-				System.out.print(infTape[temp] + " | ");
-			}	System.out.print(" | " + infTape[temp]);
+	public void endResult() {
+		int instructionCounter = 0;
+		for (executionCounter = 0 ; executionCounter < 10000 && tape.getStatus() ; executionCounter++) {
+			StmtNode currentCommand = parser.getCommand(instructionCounter);
+			instructionCounter = currentCommand.execute(instructionCounter);
+		}
+	}
 
-			temp++;
-		} while (temp <= limit);
+	public int getExecutionCounter() {
+		return executionCounter;
+	}
+
+	public int getPointerValue() {
+		return tape.getPointerValue();
 	}
 }
