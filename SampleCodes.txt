@@ -1,4 +1,4 @@
-# Binary Incrementor
+=== Binary Incrementor ===
 - Alphabet: {0, 1}
 - Initial Tape State: 1 0 1 1
 - Expected Output: 1 1 1 0
@@ -31,7 +31,7 @@ flip_blank:
   WRITE 1
   HALT
 
-# Unary Addition
+=== Unary Addition ===
 - Alphabet: {0, 1, +}
 - Initial Tape State: 1 1 1 + 1 1
 - Expected Output: 1 1 1 1 1
@@ -59,4 +59,14 @@ erase_last:
   WRITE _
   HALT
 
-===
+=== Required Test ===
+- Alphabet: {0, 1}
+- Initial Tape State: 1 0 1
+- Expected Output: 1 0 1 1
+- Code:
+
+scan: IF _ GOTO append
+RIGHT
+GOTO scan
+append: WRITE 1
+HAL
