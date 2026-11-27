@@ -1,3 +1,5 @@
 public abstract class StmtNode {
-    void execute() {}
+    int execute(int instructionCounter) {
+        return instructionCounter + 1;
+    }
 }
