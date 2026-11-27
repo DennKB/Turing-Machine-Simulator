@@ -1,6 +1,6 @@
 public class Tape {
-	private static char[] infTape;
-	private static int tapeHead;
+	private static char[] infTape; // only one true tape
+	private static int tapeHead; // only one true pointer
 	private boolean running = true;
 
 	public Tape() {
@@ -8,25 +8,25 @@ public class Tape {
 		tapeHead = 0;
 	}
 
+	// getters
 	public int getEntry(int pos) {
 		return infTape[pos];
 	}
-
 	public int getPointerValue() {
 		return tapeHead;
 	}
-
 	public boolean getStatus() {
 		return running;
 	}
-
 	public static char[] getTape() {
 		return infTape;
 	}
 
+	// initializes the initial tape state
 	public void initializeTape(String input) {
 		char[] start = input.replaceAll("\\s+", "").toCharArray();
 		//System.out.println(start); //Debugging
+		
 		int temp;
 		int last = 0;
 
@@ -38,9 +38,9 @@ public class Tape {
 		for (int x = last ; x < infTape.length ; x++) {
 			infTape[x] = '_';
 		}
-
 	}
 
+	// prints every value of the tape until the true end (what follows are all blanks ('_'))
 	public void printCurrentState(String nextCommand) {
 		int counter;
 		for (counter = 0 ; counter < infTape.length ; counter++) {
