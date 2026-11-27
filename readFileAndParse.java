@@ -16,22 +16,21 @@ public class readFileAndParse {
         parsedProgram = parse();
     }
 
+    // getters
     String getNextCommand(int x) {
         return commandLines.get(x);
     }
-
     public List<StmtNode> getParsedProgram() {
         return parsedProgram;
     }
-
     public List<LabelNode> getLabels() {
         return labels;
     }
-
     public StmtNode getCommand(int instructionCounter) {
         return parsedProgram.get(instructionCounter);
     }
 
+    // Label Node (location name and value in the parsedPrograms list)
     static class LabelNode {
         final String name;
         final int location;
@@ -42,7 +41,7 @@ public class readFileAndParse {
         }
     }
 
-    // 1. IF Command (Reads/checks a character condition)
+    // If (checks if symbol 
     static class IfNode extends StmtNode {
         char symbol;
         String targetName;
@@ -65,7 +64,7 @@ public class readFileAndParse {
         }
     }
 
-    // 2. GOTO Command
+    // Goto
     static class GotoNode extends StmtNode {
         String targetName;
         int targetLine;
@@ -83,7 +82,7 @@ public class readFileAndParse {
         }
     }
 
-    // 3. WRITE Command (Writes a character)
+    // Write
     static class WriteNode extends StmtNode {
         char character;
         WriteNode(char character) { this.character = character; }
@@ -94,7 +93,7 @@ public class readFileAndParse {
         }
     }
 
-    // 4. RIGHT Command
+    // Right
     static class RightNode extends StmtNode {
         int execute(int instructionCounter) {
             tape.moveRight();
@@ -102,7 +101,7 @@ public class readFileAndParse {
         }
     }
 
-    // 5. LEFT Command
+    // Left
     static class LeftNode extends StmtNode {
         int execute(int instructionCounter) {
             tape.moveLeft();
@@ -110,7 +109,7 @@ public class readFileAndParse {
         }
     }
 
-    // 6. HALT Command
+    // Halt
     static class HaltNode extends StmtNode {
         int execute(int instructionCounter) {
             tape.stop();
@@ -118,20 +117,21 @@ public class readFileAndParse {
         }
     }
 
-    // --- Parser Implementation ---
+    // Parser
     static class Parser {
         private final List<String> tokens;
         private int tapeHead = 0; //move to Tape.java
         private final List<LabelNode> labels = new ArrayList<>();
 
+        // parser object constructor
         public Parser(List<String> tokens) {
             this.tokens = tokens;
         }
 
+        // getters
         public List<LabelNode> getLabels() {
             return labels;
         }
-
         private String peek() {
             if (tapeHead < tokens.size()) return tokens.get(tapeHead);
             return null;
@@ -259,6 +259,7 @@ public class readFileAndParse {
         }
     }
 
+    // store the commands into a list to be used in Sequential Running
     public List<String> storeCommands(Path filePath) {
         List<String> list = new ArrayList<>();
 
@@ -277,26 +278,34 @@ public class readFileAndParse {
         return list;
     }
 
+    // parses the commands in "TuringMachine.txt"
     public List<StmtNode> parse() {
         String sourceCode = "";
         Path filePath = Paths.get("TuringMachine.txt");
 
         commandLines = storeCommands(filePath);
-
+        
+        // reads the entire file and store it into a variable "sourceCode"
         try {
             sourceCode = Files.readString(filePath);
         } catch (IOException e) {
             throw new IllegalAccessError("Could not read 'TuringMachine.txt': " + e.getMessage());
         }
 
+        // creates tokens for the different commands, if the file is blank it creates a blank token list,
+        // else it will add elements to a list with each word being its own separate element
         List<String> tokens = sourceCode.isBlank()
                 ? new ArrayList<>()
                 : Arrays.asList(sourceCode.trim().split("\\s+"));
 
+        // it will parse the generated tokens, it will return a List of "StmtNode" objects and store "labelNode" objects
+        // StmtNode store the different commands (IF, GOTO, WRITE, LEFT, RIGHT & HALT)
+        // labelNode stores the different line labels used for GOTO and IF GOTO
         Parser parser = new Parser(tokens);
         List<StmtNode> program = parser.parseProgram();
         labels = parser.getLabels();
 
+        // prints when the sourceCode is successfully processed
         System.out.println("Successfully parsed " + program.size() + " statements from TuringMachine.txt");
 
         return program;
